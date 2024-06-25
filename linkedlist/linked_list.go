@@ -1,10 +1,11 @@
 package linkedlist
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Error byte
-
-import ("fmt")
 
 const (
 	IndexOutOfRange Error = iota
@@ -97,6 +98,7 @@ func (list *LinkedList[T]) PushBack(value T) {
 	} else {
 		node := &Node[T]{value: value, next: nil}
 		list.tail.next = node
+		list.tail = node
 		list.length++
 	}
 }
@@ -112,6 +114,7 @@ func (list *LinkedList[T]) PopBack() (T, Error) {
 		if current.next == list.tail {
 			value := list.tail.value
 			list.tail = current
+			current.next = nil
 			list.length--
 			return value, Nil
 		}
@@ -134,6 +137,7 @@ func (list *LinkedList[T]) Back() (T, Error) {
 	}
 	return list.tail.value, Nil
 }
+
 func (list *LinkedList[T]) Insert(index int, value T) Error {
 	if index < 0 || index >= list.length {
 		return IndexOutOfRange
@@ -216,16 +220,20 @@ func (list *LinkedList[T]) Reverse() LinkedList[T] {
 	return *reversed
 }
 
-func (list *LinkedList[T fmt.Stringer]) String() {
+func (list *LinkedList[T]) String() string {
 	var sb strings.Builder
 	fmt.Fprintf(&sb, "[")
-
+	if list.Size() == 0 {
+		return "[]"
+	}
 	current := list.head
 	for current.next != nil {
-		fmt.Fprintf(&sb, "%v, ",current.value)
+		fmt.Fprintf(&sb, "%v, ", current.value)
 		current = current.next
 	}
 	fmt.Fprintf(&sb, "%v", current.value)
 
 	fmt.Fprintf(&sb, "]")
+
+	return sb.String()
 }
