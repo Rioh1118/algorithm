@@ -6,10 +6,10 @@ import (
 )
 
 type Ordered interface {
-    ~int | ~int8 | ~int16 | ~int32 | ~int64 |
-    ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
-    ~float32 | ~float64 |
-    ~string
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+		~float32 | ~float64 |
+		~string
 }
 type Comparable interface {
 	comparable
@@ -122,32 +122,32 @@ func (root *Node[T]) Is_in_tree(value T) bool {
 		return true
 	}
 	return root.left.Is_in_tree(value) ||
-	root.right.Is_in_tree(value)
+		root.right.Is_in_tree(value)
 }
 
-func (root *Node[T]) get_min() T {
+func (root *Node[T]) Get_min() T {
 	if root.left == nil {
 		return root.value
 	}
-	return root.left.get_min()
+	return root.left.Get_min()
 }
 
-func (root *Node[T]) get_max() T {
+func (root *Node[T]) Get_max() T {
 	if root.right == nil {
 		return root.value
 	}
-	return root.right.get_max()
+	return root.right.Get_max()
 }
 
-func (root *Node[T]) delete(value T) {
+func (root *Node[T]) Delete(value T) {
 	if root == nil {
 		return
 	}
 	if value < root.value {
-		root.left.delete(value)
+		root.left.Delete(value)
 	}
 	if value > root.value {
-		root.right.delete(value)
+		root.right.Delete(value)
 	}
 	if value == root.value {
 		if root.left == nil && root.right == nil {
@@ -155,14 +155,14 @@ func (root *Node[T]) delete(value T) {
 			return
 		} else if root.left == nil && root.right != nil {
 			root.value = root.right.value
-			root.right = nil
+			root.right = root.right.right
 		} else if root.left != nil && root.right == nil {
 			root.value = root.left.value
-			root.left = nil
+			root.left = root.left.left
 		} else {
 			right_min := root.right.get_min()
 			root.value = right_min
-			root.right.delete(right_min)
+			root.right.Delete(right_min)
 		}
 	}
 }
